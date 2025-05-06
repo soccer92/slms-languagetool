@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Grammar Checker</title>
+</head>
+<body>
+    <h2>Grammar Checker</h2>
+    <textarea id="textInput" rows="10" cols="80" placeholder="Enter your text here."></textarea><br><br>
+    <button onclick="checkGrammar()">Check Grammar</button><br><br>
+    <textarea id="output" rows="5" cols="80" readonly placeholder="Grammar feedback will appear here."></textarea>
+
+    <style>
+        body {
+            font-family: "Inter", sans-serif;
+        }
+
+        body > h2 {
+            text-align: center;
+            color: #1b315e;
+        }
+
+        body > button {
+            background-color: #fff;
+            font-size: 12px;
+            color: #1b315e;
+            padding: 12px 6px 12px 6px;
+            border: 1px solid #1b315e;
+            border-radius: 2px;
+        }
+    </style>
+
+    <script>
+    function checkGrammar() {
+        var userText = document.getElementById("textInput").value;
+        var apiUrl = "https://slms-languagetool.onrender.com/check";
+
+        fetch(apiUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                text: userText,
+                language: "en-AU"
+            })
+        })
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            if (data.message) {
+                document.getElementById("output").value = data.message;
+            } else {
+                document.getElementById("output").value = "No issues found.";
+            }
+        })
+        .catch(function(error) {
+            document.getElementById("output").value = "Error: " + error;
+        });
+    }
+    </script>
+</body>
+</html>
