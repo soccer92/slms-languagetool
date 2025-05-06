@@ -1,10 +1,11 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import requests
 
 app = Flask(__name__)
-CORS(app)  # 🔥 This line enables CORS for all routes
+CORS(app)  # Enable CORS
 
+# === Grammar check API ===
 @app.route('/check', methods=['POST'])
 def grammar_check():
     data = request.json
@@ -34,6 +35,12 @@ def grammar_check():
 
     return jsonify(message=message)
 
+# === Serve the grammar-check.html page ===
+@app.route('/grammar')
+def serve_grammar_checker():
+    return send_from_directory('static', 'grammar-check.html')
+
+# === Default route ===
 @app.route('/', methods=['GET'])
 def home():
     return 'SLMS LanguageTool API is running.', 200
